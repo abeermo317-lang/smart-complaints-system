@@ -82,7 +82,7 @@ div[data-testid="stTextArea"] {
 </style>
 """, unsafe_allow_html=True)
 
-logo_path = Path(r"C:\Users\user\Desktop\smart_saberdey\tanta_logo.png")
+logo_path = Path("tanta_logo.png")
 
 col1, col2 = st.columns([1, 4])
 

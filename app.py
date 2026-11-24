@@ -1,6 +1,11 @@
+
 import streamlit as st
 from pathlib import Path
+import uuid
+from datetime import datetime
+from storage import initialize_files, save_complaint
 
+initialize_files()
 st.set_page_config(
     page_title="Tanta University Complaints",
     page_icon="🎓",
@@ -153,14 +158,34 @@ with st.form("complaint_form"):
         type=["pdf", "png", "jpg", "jpeg"]
     )
 
-    st.write("")
     submitted = st.form_submit_button("Submit Complaint")
 
     if submitted:
         if not student_name or not student_id or not complaint_details:
             st.warning("Please fill in your name, university ID, and complaint details.")
+
         elif college == "Select your college":
             st.warning("Please select your college.")
+
         else:
+            complaint_id = f"TC-{datetime.now().year}-{uuid.uuid4().hex[:6].upper()}"
+
+            complaint = {
+                "complaint_id": complaint_id,
+                "college": college,
+                "complaint_type": complaint_type,
+                "title": complaint_title,
+                "details": complaint_details,
+                "status": "Pending",
+                "ai_category": "",
+                "priority": "",
+                "reasoning": "",
+                "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+
+            save_complaint(complaint)
+
             st.success("Your complaint has been submitted successfully!")
-            st.info("Your complaint will be reviewed by the responsible department.")
+            st.info(f"Your Complaint ID is: {complaint_id}")
+            st.info("Please save this number to track your complaint.").write("")
+    
